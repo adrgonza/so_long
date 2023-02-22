@@ -17,6 +17,20 @@
 #  define BUFFER_SIZE 0
 # endif
 
+typedef struct	map {
+	char **mapita;
+	int map_height;
+	int map_weight;
+}				t_map;
+
+typedef struct	game {
+	
+	void	*mlx;
+	void	*window;
+	int 	image_size;
+	void 	*floor;
+}				t_game;
+
 int	main(int argc, char **argv);
 char	*get_next_line(int fd);
 int ft_check_map(char *file_name);

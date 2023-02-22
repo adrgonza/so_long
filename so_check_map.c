@@ -1,25 +1,28 @@
 #include "so_long.h"
 
-int ft_check_items(int fd)
+int ft_check_items(int fd,char *file_name)
 {
 	t_map map;
 	int i;
 
 	i = 0;
-	while (i)
+	while (get_next_line(fd))//check map lines fosize of char **
+		i++;
+	printf("\n\n%d\n\n", i);
+	map.map_height = i; //giving height map value
+	printf("\n\n%d\n\n", map.map_weight);
+	fd = open(file_name, O_RDONLY);// reopen file to 
+	map.mapita = malloc(sizeof(char *) * i); //allocate memory for map
+	while (i) //putting map on map variable
     {
 		map.mapita[i] = get_next_line(fd);
 		printf("%s", map.mapita[i]);
-		i++;
+		i--;
     }
 	i = 0;
-	while(map.mapita[1][i])
-		i++;
-	map.map_weight = i;
-	i = 0;
-	while(map.mapita[i][1])
-		i++;
-	map.map_height = i;
+	while (map.mapita[1][++i]); //checking weight
+	map.map_weight = i; // giving weight map value
+	printf("\n\n%d\n\n", map.map_weight);
 	return 1;
 }
 
@@ -42,7 +45,7 @@ int ft_check_map(char *file_name)
 		return 0;
 	if(file_name[--i] != '.')
 		return 0;
-	//if (!ft_check_items(fd))
-		//return 0;
+	if (!ft_check_items(fd, file_name))
+		return 0;
 	return (1);
 }

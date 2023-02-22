@@ -12,10 +12,10 @@ $(NAME): $(OBJ)
 all : $(NAME)
 
 clean:
-	rm -f
+	$(RM) $(OBJ)
 
 fclean: clean
-	@rm -f $(NAME)
+	@$(RM) $(NAME)
 
 re: fclean all
 
