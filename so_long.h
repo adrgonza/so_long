@@ -6,6 +6,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <string.h>
+#include <mlx.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE BUFSIZ
@@ -18,5 +19,6 @@
 
 int	main(int argc, char **argv);
 char	*get_next_line(int fd);
+int ft_check_map(char *file_name);
 
 #endif
