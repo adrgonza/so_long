@@ -1,6 +1,6 @@
 NAME = so_long
 cc = gcc
-FLAGS_MLX = -lmlx -framework OpenGL -framework AppKit -fsanitize=address
+FLAGS_MLX = -lmlx -framework OpenGL -framework AppKit
 RM = rm -f
 SRC = so_long.c get_next_line.c so_check_map.c\
 
