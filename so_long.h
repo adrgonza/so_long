@@ -29,10 +29,14 @@ typedef struct	game {
 	void	*window;
 	int 	image_size;
 	void 	*floor;
+	void 	*exit;
+	void 	*player;
+	void 	*wall;
+	void 	*collect;
 }				t_game;
 
 int	main(int argc, char **argv);
 char	*get_next_line(int fd);
-int ft_check_map(char *file_name);
+int ft_check_file(char *file_name, t_map *map);
 
 #endif
