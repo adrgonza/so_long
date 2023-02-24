@@ -1,20 +1,19 @@
 #include "so_long.h"
 
-int ft_check_items(t_map *map)
+int ft_check_items(t_map *map) 
 {
 	int i;
 
 	i = 1;
-	while (map->mapita[1][i] == '1')
+	printf("\n%c\n", map->mapita[0][0]);
+	/*
+	while (map->mapita[1][i] == '1' && map->mapita[map->map_height][i] == '1')
 		i++;
-	if(map->mapita[1][++i] != 0)
-		return 0;
-	i = 1;
-	while (map->mapita[map->map_height][i] == '1')
-		i++;
-	if(map->mapita[map->map_height][++i] != 0)
-		return 0;
+	if (map->mapita[1][++i] != 0 || map->mapita[map->map_height][i] != 0)
+	*/
+		//return 0;
 	return (1);
+	
 }
 
 int ft_read_map(int fd,char *file_name, t_map *map)
@@ -26,13 +25,20 @@ int ft_read_map(int fd,char *file_name, t_map *map)
 		i++;
 	map->map_height = i; //giving height map value
 	fd = open(file_name, O_RDONLY);// reopen file
-	map->mapita = malloc(sizeof(char *) * i); //allocate memory for map
+	map->mapita = malloc(sizeof(char *) * i + 1); //allocate memory for map
+	map->mapita[i + 1] = NULL; 
 	i = 0;
-	while (i++ <= map->map_height) //putting map on map variable
+	while (i <= map->map_height - 1) //putting map on map variable
+	{
 		map->mapita[i] = get_next_line(fd);
+		
+		i++;
+	}
+	printf("\n%d\n", i); 
 	i = 0;
 	while (map->mapita[1][++i]); //checking weight
-	map->map_weight = i - 1; // giving weight map value
+	map->map_weight = i; // giving weight map value
+	printf("%d\n", i); 
 	if (!ft_check_items(map))
 		return 0;
 	return 1;
