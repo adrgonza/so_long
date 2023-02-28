@@ -2,6 +2,7 @@
 
 int ft_check_played(t_map *map)
 {
+	
 	return (1);
 }
 
@@ -11,11 +12,10 @@ int ft_check_items(t_map *map) // check if it has only 1 p e
 	int i;
 	int j;
 	int p;
-	int c;
 	int e;
 	
 	p = 0;
-	c = 0;
+	map->c_count = 0;
 	e = 0;
 	i = -1;
 	while (++i < map->map_height)
@@ -25,16 +25,20 @@ int ft_check_items(t_map *map) // check if it has only 1 p e
 		{
 			m = map->mapita[i][j];
 			if (map->mapita[i][j] == 'P')
+			{
+				map->player_x = j;
+				map->player_y = i;
 				p++;
+			}
 			if (map->mapita[i][j] == 'C')
-				c++;
+				map->c_count++;
 			if (map->mapita[i][j++] == 'E')
 				e++;
 			if (m != '1' && m != '0' && m != 'P' && m != 'C' && m != 'E')
 				return 0;			
 		}
 	}
-	if(!ft_check_played(map) || p != 1 || c < 1 || e != 1)
+	if(!ft_check_played(map) || p != 1 || map->c_count < 1 || e != 1)
 		return 0;
 	return (1);	
 }
@@ -46,8 +50,8 @@ int ft_read_map(int fd,char *file_name, t_map *map)
 	fd = open(file_name, O_RDONLY);// reopen file
 	map->mapita = malloc(sizeof(char *) * map->map_height + 1); //allocate memory for map
 	if(!map->mapita)
+
 		return 0;
-	map->mapita[i + 1] = NULL; 
 	i = 0;
 	while (i <= map->map_height - 1) //putting map on map variable
 		map->mapita[i++] = get_next_line(fd);
@@ -71,7 +75,7 @@ int ft_check_file(char *file_name, t_map *map)
 {
 	int i;
 	int fd;
-
+	
 	fd = open(file_name, O_RDONLY);//open file
 	if (fd < 1) //check map exist
 		return 0;

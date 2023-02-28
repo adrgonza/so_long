@@ -21,6 +21,9 @@ typedef struct	map {
 	char **mapita;
 	int map_height;
 	int map_weight;
+	int player_x;
+	int player_y;
+	int c_count;
 }				t_map;
 
 typedef struct	game {
@@ -33,6 +36,7 @@ typedef struct	game {
 	void 	*player;
 	void 	*wall;
 	void 	*collect;
+	t_map	*map_data;
 }				t_game;
 
 int	main(int argc, char **argv);
