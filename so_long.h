@@ -24,6 +24,8 @@ typedef struct	map {
 	int player_x;
 	int player_y;
 	int c_count;
+	int c_count_copy;
+	char *file;
 }				t_map;
 
 typedef struct	game {

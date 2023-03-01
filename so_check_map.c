@@ -1,12 +1,61 @@
 #include "so_long.h"
 
-int ft_check_played(t_map *map)
+int swap_player(t_map *map, int y, int x, char **copy)
 {
-	
+	if (x < 0 || x >= map->map_weight || y < 0 || y >= map->map_height)
+		return 0;
+	if (copy[y][x] == 'C')
+	{
+		map->c_count_copy--;
+		copy[y][x] = '0';
+	}
+	else if (copy[y][x] == 'E') {
+		if(map->c_count_copy == 0)
+			return 1;
+	}
+	if (copy[y][x] == '0' || copy[y][x] == 'P') // verificar que la casilla sea vacía o la casilla inicial del jugador
+	{
+		copy[y][x] = '1';
+		if (swap_player(map, y, x + 1, copy) || 
+			swap_player(map, y, x - 1, copy) || 
+			swap_player(map, y + 1, x, copy) || 
+			swap_player(map, y - 1, x, copy))
+			return 1;
+	}
+	return(0);
+}
+
+int ft_check_played(t_map *map, char *file_name)
+{
+	int i;
+	char **copy;
+	int fd;
+	int x;
+	int y;
+
+	x = map->player_x;
+	y = map->player_y;
+	map->c_count_copy = map->c_count;
+	fd = open(file_name, O_RDONLY);
+	if (fd < 0)
+		return 0;
+	copy = malloc(sizeof(char *) * map->map_height + 1);
+	if(!copy)
+		return 0;
+	i = 0;
+	while (i <= map->map_height - 1)
+		copy[i++] = get_next_line(fd);
+	i = swap_player(map, y, x, copy);
+	x = 0;
+	while(x < map->map_height)
+		free(copy[x++]);
+	free(copy);
+	if (i == 0)
+		return 0;
 	return (1);
 }
 
-int ft_check_items(t_map *map) // check if it has only 1 p e
+int ft_check_items(t_map *map, char *file_name) // check if it has only 1 p e
 {
 	char m;
 	int i;
@@ -38,7 +87,7 @@ int ft_check_items(t_map *map) // check if it has only 1 p e
 				return 0;			
 		}
 	}
-	if(!ft_check_played(map) || p != 1 || map->c_count < 1 || e != 1)
+	if(!ft_check_played(map, file_name) || p != 1 || map->c_count < 1 || e != 1)
 		return 0;
 	return (1);	
 }
@@ -48,9 +97,10 @@ int ft_read_map(int fd,char *file_name, t_map *map)
 	int i;
 
 	fd = open(file_name, O_RDONLY);// reopen file
+	if(fd < 0)
+		return 0;
 	map->mapita = malloc(sizeof(char *) * map->map_height + 1); //allocate memory for map
 	if(!map->mapita)
-
 		return 0;
 	i = 0;
 	while (i <= map->map_height - 1) //putting map on map variable
@@ -66,7 +116,7 @@ int ft_read_map(int fd,char *file_name, t_map *map)
 	while (i < map->map_height) // same of before
 		if(map->mapita[i][0] != '1' || map->mapita[i++][map->map_weight - 2] != '1')
 			return (0);
-	if (!ft_check_items(map))
+	if (!ft_check_items(map, file_name))
 		return 0;
 	return 1;
 }
@@ -77,7 +127,7 @@ int ft_check_file(char *file_name, t_map *map)
 	int fd;
 	
 	fd = open(file_name, O_RDONLY);//open file
-	if (fd < 1) //check map exist
+	if (fd < 0) //check map exist
 		return 0;
 	i = 0;
 	while (file_name[i])//check map file is .ber

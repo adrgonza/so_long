@@ -12,7 +12,7 @@ int ft_free_map(t_map *map, t_game *game, int x)
 	while(i < map->map_height)
 		free(map->mapita[i++]);
 	free(map->mapita);
-	return (0);
+	exit(0);
 }
 
 int  ft_image_map(t_map *map, t_game *game)
@@ -47,19 +47,20 @@ int  ft_image_map(t_map *map, t_game *game)
 	return(1);
 }
 
-int ft_move_check(t_map *map, int y, int x)
+int ft_move_check(t_game *game, int y, int x)
 {
-	if(map->mapita[y][x] == '1')
-		return(0);
-	if(map->mapita[y][x] == 'C')
-		map->c_count--;
-	if(map->mapita[map->player_y][map->player_x] == 'E')
+	if(game->map_data->mapita[y][x] == '1')
+		return 0;
+	if(game->map_data->mapita[y][x] == 'C')
+		game->map_data->c_count--;
+	if(game->map_data->mapita[y][x] == 'E')
 	{
-		if(map->c_count > 0)
+		if(game->map_data->c_count > 0)
 			return(0);
 		else
-			printf("\n\nhols\n");//salir del programa.
+			ft_free_map(game->map_data, game, 1);//salir del programa.
 	}
+	game->map_data->mapita[game->map_data->player_y][game->map_data->player_x] = '0';
 	return (1);
 }
 
@@ -71,19 +72,18 @@ int ft_movement(int key,t_game *game)
 	x = game->map_data->player_x;
 	y = game->map_data->player_y;
 	if(key == 53) //esc
-		return (0);
-	if(key == 13 && ft_move_check(game->map_data, y - 1, x)) //up
+		ft_free_map(game->map_data, game, 1);
+	if(key == 13 && ft_move_check(game, y - 1, x)) //up
 		game->map_data->player_y--;
-	if(key == 1 && ft_move_check(game->map_data, y + 1, x)) //down
+	if(key == 1 && ft_move_check(game, y + 1, x)) //down
 		game->map_data->player_y++;
-	if(key == 0 && ft_move_check(game->map_data, y, x - 1)) //left
+	if(key == 0 && ft_move_check(game, y, x - 1)) //left
 		game->map_data->player_x--;
-	if(key == 2 && ft_move_check(game->map_data, y, x + 1)) //right
+	if(key == 2 && ft_move_check(game, y, x + 1)) //right
 		game->map_data->player_x++;
 	if (key != 13 && key != 1 && key != 0 && key != 2)
 		return (1);
 	game->map_data->mapita[game->map_data->player_y][game->map_data->player_x] = 'P';
-	game->map_data->mapita[y][x] = '0';
 	ft_image_map(game->map_data, game);
 	return (1);
 }
@@ -99,10 +99,20 @@ int	main(int argc, char **argv)
 	game.mlx = mlx_init();
 	game.window = mlx_new_window(game.mlx, ((map.map_weight - 1) * 32), (map.map_height * 32), "Midlands v0.3"); //create windows
 	game.floor = mlx_xpm_file_to_image(game.mlx, "textures/floor.xpm", &game.image_size, &game.image_size);
+	if(!game.floor)
+		ft_free_map(&map, &game, 0);
 	game.exit = mlx_xpm_file_to_image(game.mlx, "textures/exit.xpm", &game.image_size, &game.image_size);
+	if(!game.exit)
+		ft_free_map(&map, &game, 0);
 	game.player = mlx_xpm_file_to_image(game.mlx, "textures/player.xpm", &game.image_size, &game.image_size);
+	if(!game.player)
+		ft_free_map(&map, &game, 0);
 	game.collect = mlx_xpm_file_to_image(game.mlx, "textures/collect.xpm", &game.image_size, &game.image_size);
+	if(!game.collect)
+		ft_free_map(&map, &game, 0);
 	game.wall = mlx_xpm_file_to_image(game.mlx, "textures/wall.xpm", &game.image_size, &game.image_size);
+	if(!game.wall)
+		ft_free_map(&map, &game, 0);
 	ft_image_map(&map, &game);
 	mlx_key_hook(game.window, ft_movement, &game);
 	mlx_loop(game.mlx);
