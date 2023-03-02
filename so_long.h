@@ -1,12 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adrgonza <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/01 19:38:08 by adrgonza          #+#    #+#             */
+/*   Updated: 2023/03/01 19:38:09 by adrgonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
+# include <stdarg.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <string.h>
-#include <mlx.h>
+# include <mlx.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE BUFSIZ
@@ -17,32 +30,42 @@
 #  define BUFFER_SIZE 0
 # endif
 
-typedef struct	map {
-	char **mapita;
-	int map_height;
-	int map_weight;
-	int player_x;
-	int player_y;
-	int c_count;
-	int c_count_copy;
-	char *file;
+typedef struct m{
+	char			**map;
+	int				height;
+	int				weight;
+	int				player_x;
+	int				player_y;
+	unsigned int	step_count;
+	int				c_cn;
+	int				c_count_copy;
+	int				p_cn;
+	int				e_cn;
+	char			*file;
+	int				fd;
+	int				x;
+	int				y;
+	char			*str;
 }				t_map;
 
-typedef struct	game {
-	
+typedef struct g {
 	void	*mlx;
-	void	*window;
-	int 	image_size;
-	void 	*floor;
-	void 	*exit;
-	void 	*player;
-	void 	*wall;
-	void 	*collect;
-	t_map	*map_data;
+	void	*wido;
+	void	*floor;
+	void	*exit;
+	void	*player;
+	void	*wall;
+	void	*colle;
+	int		sz;
+	int		x;
+	int		y;
+	t_map	*m;
 }				t_game;
 
-int	main(int argc, char **argv);
+int		main(int argc, char **argv);
 char	*get_next_line(int fd);
-int ft_check_file(char *file_name, t_map *map);
+int		ft_check_file(char *file_n, t_map *m);
+int		ft_printf(char const *s, ...);
+int		ft_free_m(t_map *m, t_game *g, int x);
 
 #endif

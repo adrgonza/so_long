@@ -1,119 +1,131 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adrgonza <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/01 19:37:56 by adrgonza          #+#    #+#             */
+/*   Updated: 2023/03/01 19:37:58 by adrgonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
-int ft_free_map(t_map *map, t_game *game, int x)
+int	ft_free_m(t_map *m, t_game *g, int x)
 {
-	int i;
+	int	i;
 
-	if(x == 0)
-		write(1, "\033[31mError:\nInvalid Map", 23);
-	else
-		mlx_destroy_window(game->mlx, game->window);
-	i = 0;
-	while(i < map->map_height)
-		free(map->mapita[i++]);
-	free(map->mapita);
+	if (x == 0 || x == 1)
+		ft_printf("\033[31mError:\nInvalid map");
+	if (x == 3)
+		ft_printf("\033[31mError:\nMissing files");
+	if (x == 2)
+		mlx_destroy_window(g->mlx, g->wido);
+	if (x == 1 || x == 2)
+	{
+		i = 0;
+		while (i < m->height)
+			free (m->map[i++]);
+		free (m->map);
+	}
 	exit(0);
 }
 
-int  ft_image_map(t_map *map, t_game *game)
+void	ft_image_m(t_map *m, t_game *g)
 {
-	int i = 0;
-	int j = 0;
-	int k = 1;
-	int l = 1;
+	int	i;
+	int	j;
 
-	while(i < map->map_height)
+	g->x = 1;
+	i = -1;
+	while (++i < m->height)
 	{
 		j = 0;
-		k = 1;
-		while(j < map->map_weight - 1)// hacer check que la imagen existe
+		g->y = 1;
+		while (j < m->weight - 1)
 		{
-			if(map->mapita[i][j] == '0')
-				mlx_put_image_to_window(game->mlx, game->window, game->floor, k, l);
-			if(map->mapita[i][j] == '1')
-				mlx_put_image_to_window(game->mlx, game->window, game->wall, k, l);
-			if(map->mapita[i][j] == 'P')
-				mlx_put_image_to_window(game->mlx, game->window, game->player, k, l);
-			if(map->mapita[i][j] == 'C')
-				mlx_put_image_to_window(game->mlx, game->window, game->collect, k, l);
-			if(map->mapita[i][j] == 'E')
-				mlx_put_image_to_window(game->mlx, game->window, game->exit, k, l);
-			k += 32;
-			j++;
+			if (m->map[i][j] == '0')
+				mlx_put_image_to_window(g->mlx, g->wido, g->floor, g->y, g->x);
+			if (m->map[i][j] == '1')
+				mlx_put_image_to_window(g->mlx, g->wido, g->wall, g->y, g->x);
+			if (m->map[i][j] == 'P')
+				mlx_put_image_to_window(g->mlx, g->wido, g->player, g->y, g->x);
+			if (m->map[i][j] == 'C')
+				mlx_put_image_to_window(g->mlx, g->wido, g->colle, g->y, g->x);
+			if (m->map[i][j++] == 'E')
+				mlx_put_image_to_window(g->mlx, g->wido, g->exit, g->y, g->x);
+			g->y += 32;
 		}
-		l += 32;
-		i++;
+		g->x += 32;
 	}
-	return(1);
 }
 
-int ft_move_check(t_game *game, int y, int x)
+int	ft_mapove_check(t_game *g, int y, int x)
 {
-	if(game->map_data->mapita[y][x] == '1')
-		return 0;
-	if(game->map_data->mapita[y][x] == 'C')
-		game->map_data->c_count--;
-	if(game->map_data->mapita[y][x] == 'E')
+	if (g->m->map[y][x] == '1')
+		return (0);
+	if (g->m->map[y][x] == 'C')
+		g->m->c_cn--;
+	if (g->m->map[y][x] == 'E')
 	{
-		if(game->map_data->c_count > 0)
-			return(0);
+		if (g->m->c_cn > 0)
+			return (0);
 		else
-			ft_free_map(game->map_data, game, 1);//salir del programa.
+		{
+			ft_printf("\nPasos: %d\n", g->m->step_count++);
+			ft_printf("\n\n\033[0;32mEnhorabuena!!\n\n");
+			ft_free_m(g->m, g, 2);
+		}
 	}
-	game->map_data->mapita[game->map_data->player_y][game->map_data->player_x] = '0';
+	ft_printf("\nPasos: %d\n", g->m->step_count++);
+	g->m->map[g->m->player_y][g->m->player_x] = '0';
 	return (1);
 }
 
-int ft_movement(int key,t_game *game)
+int	ft_movement(int key, t_game *g)
 {
-	int x;
-	int y;
+	int	x;
+	int	y;
 
-	x = game->map_data->player_x;
-	y = game->map_data->player_y;
-	if(key == 53) //esc
-		ft_free_map(game->map_data, game, 1);
-	if(key == 13 && ft_move_check(game, y - 1, x)) //up
-		game->map_data->player_y--;
-	if(key == 1 && ft_move_check(game, y + 1, x)) //down
-		game->map_data->player_y++;
-	if(key == 0 && ft_move_check(game, y, x - 1)) //left
-		game->map_data->player_x--;
-	if(key == 2 && ft_move_check(game, y, x + 1)) //right
-		game->map_data->player_x++;
+	x = g->m->player_x;
+	y = g->m->player_y;
+	if (key == 53)
+		ft_free_m(g->m, g, 2);
+	if (key == 13 && ft_mapove_check(g, y - 1, x))
+		g->m->player_y--;
+	if (key == 1 && ft_mapove_check(g, y + 1, x))
+		g->m->player_y++;
+	if (key == 0 && ft_mapove_check(g, y, x - 1))
+		g->m->player_x--;
+	if (key == 2 && ft_mapove_check(g, y, x + 1))
+		g->m->player_x++;
 	if (key != 13 && key != 1 && key != 0 && key != 2)
 		return (1);
-	game->map_data->mapita[game->map_data->player_y][game->map_data->player_x] = 'P';
-	ft_image_map(game->map_data, game);
+	g->m->map[g->m->player_y][g->m->player_x] = 'P';
+	ft_image_m(g->m, g);
 	return (1);
 }
 
 int	main(int argc, char **argv)
 {
-	t_game	game;
-	t_map map; 
+	t_game	g;
+	t_map	m;
 
-	game.map_data = &map;
-	if (argc != 2 || !ft_check_file(argv[1], &map))
-		return(ft_free_map(&map, &game, 0));
-	game.mlx = mlx_init();
-	game.window = mlx_new_window(game.mlx, ((map.map_weight - 1) * 32), (map.map_height * 32), "Midlands v0.3"); //create windows
-	game.floor = mlx_xpm_file_to_image(game.mlx, "textures/floor.xpm", &game.image_size, &game.image_size);
-	if(!game.floor)
-		ft_free_map(&map, &game, 0);
-	game.exit = mlx_xpm_file_to_image(game.mlx, "textures/exit.xpm", &game.image_size, &game.image_size);
-	if(!game.exit)
-		ft_free_map(&map, &game, 0);
-	game.player = mlx_xpm_file_to_image(game.mlx, "textures/player.xpm", &game.image_size, &game.image_size);
-	if(!game.player)
-		ft_free_map(&map, &game, 0);
-	game.collect = mlx_xpm_file_to_image(game.mlx, "textures/collect.xpm", &game.image_size, &game.image_size);
-	if(!game.collect)
-		ft_free_map(&map, &game, 0);
-	game.wall = mlx_xpm_file_to_image(game.mlx, "textures/wall.xpm", &game.image_size, &game.image_size);
-	if(!game.wall)
-		ft_free_map(&map, &game, 0);
-	ft_image_map(&map, &game);
-	mlx_key_hook(game.window, ft_movement, &game);
-	mlx_loop(game.mlx);
+	g.m = &m;
+	if (argc != 2 || !ft_check_file(argv[1], &m))
+		return (ft_free_m(&m, &g, 0));
+	g.mlx = mlx_init();
+	g.wido = mlx_new_window(g.mlx, (m.weight - 1) * 32, m.height * 32, "Mland");
+	g.floor = mlx_xpm_file_to_image(g.mlx, "textures/floor.xpm", &g.sz, &g.sz);
+	g.exit = mlx_xpm_file_to_image(g.mlx, "textures/exit.xpm", &g.sz, &g.sz);
+	g.player = mlx_xpm_file_to_image(g.mlx, "textures/plyr.xpm", &g.sz, &g.sz);
+	g.colle = mlx_xpm_file_to_image(g.mlx, "textures/colle.xpm", &g.sz, &g.sz);
+	g.wall = mlx_xpm_file_to_image(g.mlx, "textures/wall.xpm", &g.sz, &g.sz);
+	if (!g.floor || !g.exit || !g.player || !g.colle || !g.wall)
+		ft_free_m(&m, &g, 3);
+	ft_image_m(&m, &g);
+	mlx_hook(g.wido, 17, 0, ft_free_m, &g);
+	mlx_key_hook(g.wido, ft_movement, &g);
+	mlx_loop(g.mlx);
 }
