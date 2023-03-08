@@ -85,7 +85,7 @@ int	ft_check_items(t_map *m, char *file_n)
 				return (0);
 		}
 	}
-	if (!ft_playable(m, file_n) || m->p_cn != 1 || m->c_cn < 1 || m->e_cn != 1)
+	if (m->p_cn != 1 || m->c_cn < 1 || m->e_cn != 1 || !ft_playable(m, file_n))
 		return (0);
 	return (1);
 }
