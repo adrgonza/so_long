@@ -13,6 +13,8 @@ Welcome to So Long! This project involves creating a simple 2D game using the Mi
 
 ## Introduction
 
+![0F88A3FB-FC9E-454E-89AB-D693DD0F3B4B_4_5005_c](https://github.com/adrgonza/so_long/assets/105714518/29ac6e6e-5bf8-4138-b984-9bcc23122aaa)
+
 In So Long, you'll create a simple 2D game where the player controls a character through a map. The game window will display the map, character, items, and obstacles. The player's goal is to navigate the character through the map, collect items, avoid obstacles, and reach the goal to win the game. You'll use the MinilibX library to handle graphics and user input.
 
 ## Usage
