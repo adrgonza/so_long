@@ -6,7 +6,7 @@
 /*   By: adrgonza <adrgonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:38:08 by adrgonza          #+#    #+#             */
-/*   Updated: 2024/04/11 19:08:35 by adrgonza         ###   ########.fr       */
+/*   Updated: 2024/04/12 18:27:58 by adrgonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@ typedef struct map{
 int	main(int argc, char **argv);
 
 /* parser */
+int parse_all(char *file_name, t_map *map);
 int	parse_file(char *file_name, t_map *map);
+int parse_map(char *file_name, t_map *map);
+int parse_items(t_map *map);
+int parse_game(t_map *map);
+
+/* floodfill */
+int floodfill(t_map *map, char **copy, int y, int x);
 
 #endif

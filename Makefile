@@ -16,7 +16,8 @@ OBJ = $(BIN)/obj
 # Files
 SRC_FILES = \
         $(SRC)/main.c \
-
+		$(SRC)/parser.c \
+		$(SRC)/floodfill.c \
 
 OBJ_FILES = $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SRC_FILES))
 
