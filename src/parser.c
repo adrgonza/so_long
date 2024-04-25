@@ -89,7 +89,6 @@ int	parse_file(char *file_name, t_map *map)
     int     file_len;
     char    *aux;
 
-    ft_bzero(map, sizeof(map));
     map->fd = open(file_name, O_RDONLY);
     if (map->fd == -1)
         return (0);
@@ -102,7 +101,7 @@ int	parse_file(char *file_name, t_map *map)
     while (aux)
 	{
 		free(aux);
-		aux = get_next_line(map->fd);  
+		aux = get_next_line(map->fd);
         map->height++;
 	}
     close(map->fd);

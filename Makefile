@@ -18,6 +18,7 @@ SRC_FILES = \
         $(SRC)/main.c \
 		$(SRC)/parser.c \
 		$(SRC)/floodfill.c \
+		$(SRC)/game.c \
 
 OBJ_FILES = $(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SRC_FILES))
 
