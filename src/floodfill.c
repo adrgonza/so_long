@@ -2,18 +2,18 @@
 
 int floodfill(t_map *map, char **copy, int y, int x)
 {
-    if (map->c_count == 0 && map->e_count == 0)
-        return (1);
-    if (x < 0 || x >= map->lenght || y < 0 || y >= map->height)
+	if (map->c_count == 0 && map->e_count == 0)
+		return (1);
+	if (x < 0 || x >= map->lenght || y < 0 || y >= map->height)
 		return (0);
-    if (copy[y][x] == 'C')
+	if (copy[y][x] == 'C')
 	{
 		map->c_count--;
 		copy[y][x] = '0';
 	}
-    if (copy[y][x] == 'E')
+	if (copy[y][x] == 'E')
 		map->e_count = 0;
-    if (copy[y][x] == '0' || copy[y][x] == 'P')
+	if (copy[y][x] == '0' || copy[y][x] == 'P')
 	{
 		copy[y][x] = '1';
 		if (floodfill(map, copy, y, x + 1) || floodfill(map, copy, y, x - 1)

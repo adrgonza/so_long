@@ -13,7 +13,7 @@
 #pragma once
 
 # include "libft.h"
-# include <mlx.h>
+# include "mlx.h"
 
 # define K_A 0
 # define K_W 13
@@ -36,12 +36,21 @@ typedef struct map{
 	int		e_count;
 	int		player_x;
 	int		player_y;
+	int		step_count;
 }				t_map;
 
 typedef struct game{
 	t_map	*map;
 	void	*mlx;
 	void	*mlx_win;
+	void	*floor;
+	void	*exit;
+	void	*player;
+	void	*colle;
+	void	*wall;
+	int x;
+	int y;
+	int sz;
 }	t_game;
 
 /*  main  */
